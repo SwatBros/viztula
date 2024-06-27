@@ -1,4 +1,4 @@
-use actix_web::{error::ErrorInternalServerError, get, post, web, HttpResponse, Responder, Result};
+use actix_web::{error::ErrorInternalServerError, post, web, HttpResponse, Responder, Result};
 use sqlx::PgPool;
 
 use crate::chart::{
@@ -14,7 +14,7 @@ pub async fn chart(pool: web::Data<PgPool>, body: web::Json<Chart>) -> Result<im
     }
 }
 
-#[get("/chart/data")]
+#[post("/chart/data")]
 pub async fn data(body: web::Json<Chart>) -> Result<impl Responder> {
     let pool = PgPool::connect(
         format!(
