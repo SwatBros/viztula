@@ -15,9 +15,3 @@ impl Query for Chart {
         format!("SELECT {} FROM {}", self.columns.join(", "), self.table)
     }
 }
-
-impl Chart {
-    fn new(table: String, columns: Vec<String>) -> Self {
-        Self { table, columns }
-    }
-}

@@ -1,22 +1,11 @@
 use sql_builder::{dname, quote, SqlBuilder, SqlName};
-use tokio_postgres::{NoTls, Row};
+use sqlx::{PgPool, Row};
 
-use crate::utils::list;
+use crate::utils::{list, serialize_json};
 
 use super::model::Chart;
 
-pub async fn insert(chart: Chart) -> Result<i64, Box<dyn std::error::Error>> {
-    let (client, connection) =
-        tokio_postgres::connect("host=localhost user=postgres password=postgres", NoTls)
-            .await
-            .unwrap();
-
-    tokio::spawn(async move {
-        if let Err(e) = connection.await {
-            eprintln!("connection error: {}", e);
-        }
-    });
-
+pub async fn insert(pool: &PgPool, chart: Chart) -> Result<i64, Box<dyn std::error::Error>> {
     let sql = SqlBuilder::insert_into("chart")
         .field(dname!("table"))
         .field(dname!("columns"))
@@ -24,21 +13,11 @@ pub async fn insert(chart: Chart) -> Result<i64, Box<dyn std::error::Error>> {
         .returning("id")
         .sql()?;
 
-    let row = client.query_one(&sql, &[]).await?;
+    let row = sqlx::query(&sql).fetch_one(pool).await?;
     Ok(row.get("id"))
 }
 
-pub async fn query(query: String) -> Result<Vec<Row>, tokio_postgres::Error> {
-    let (client, connection) =
-        tokio_postgres::connect("host=localhost user=postgres password=postgres", NoTls)
-            .await
-            .unwrap();
-
-    tokio::spawn(async move {
-        if let Err(e) = connection.await {
-            eprintln!("connection error: {}", e);
-        }
-    });
-
-    client.query(&query, &[]).await
+pub async fn query(pool: &PgPool, query: String) -> Result<Vec<serde_json::Value>, Box<dyn std::error::Error>> {
+    let rows = sqlx::query(&query).fetch_all(pool).await?;
+    Ok(serialize_json(rows)?)
 }
