@@ -27,7 +27,7 @@ pub fn serialize_json(rows: Vec<PgRow>) -> Result<Vec<serde_json::Value>, serde_
                     (
                         column.name(),
                         match type_name {
-                            "TEXT" => json!(row.get::<String, _>(ordinal)),
+                            "TEXT" | "VARCHAR" => json!(row.get::<String, _>(ordinal)),
                             "INTEGER" => json!(row.get::<i64, _>(ordinal)),
                             "BOOLEAN" => json!(row.get::<bool, _>(ordinal)),
                             "REAL" => json!(row.get::<f64, _>(ordinal)),

@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct Chart {
+    pub db: String,
     pub table: String,
     pub columns: Vec<String>,
 }
