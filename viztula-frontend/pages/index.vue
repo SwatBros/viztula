@@ -1,9 +1,16 @@
 <script setup lang="ts">
-const { data: promise } = await useFetch('/api/hello')
+const { data } = await useFetch('/api/hello')
 
-const data = await promise
+function formatData(data: any) {
+  return data.map((d: any) => {
+    return {
+      date: d.last_update,
+      value: d.actor_id
+    }
+  })
+}
 </script>
 
 <template>
-  <pre>{{ data }}</pre>
+  <LinePlot :data="formatData(data)" />
 </template>
