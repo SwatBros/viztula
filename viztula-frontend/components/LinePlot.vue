@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 const renderChart = (data: Data[]) => {
   const width = 800;
   const height = 500;
-
+  console.log(data);
   const pr = 50;
   const pb = 50;
 
@@ -28,7 +28,7 @@ const renderChart = (data: Data[]) => {
 
   const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%f");
 
-  const x = d3.scaleLinear().range([pr, width]);
+  const x = d3.scaleTime().range([pr, width]);
   const y = d3.scaleLinear().range([height, 0]);
 
   const line = d3

@@ -3,7 +3,10 @@ export default defineEventHandler((event): Promise<any> => {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
       db: 'dvdrental',
       table: 'payment',
-      columns: ["payment_date", "amount"]
+      columns: ["payment_date", "SUM(amount)"],
+      group_by: ["payment_date"],
+      order_by: ["payment_date"],
+      limit: 10
     })
   })
 })
