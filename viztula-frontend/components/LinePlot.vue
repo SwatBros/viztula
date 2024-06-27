@@ -19,13 +19,16 @@ const renderChart = (data: Data[]) => {
   const width = 800;
   const height = 500;
 
-  const svg = d3.select("svg").attr("width", width).attr("height", height);
+  const pr = 50;
+  const pb = 50;
+
+  const svg = d3.select("svg").attr("width", width + pb).attr("height", height + pr);
   svg.selectAll("*").remove(); // Clear previous content if any
   const g = svg.append("g");
 
-  const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
+  const parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%f");
 
-  const x = d3.scaleTime().range([0, width]);
+  const x = d3.scaleLinear().range([pr, width]);
   const y = d3.scaleLinear().range([height, 0]);
 
   const line = d3
@@ -55,7 +58,7 @@ const renderChart = (data: Data[]) => {
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x));
 
-  g.append("g").call(d3.axisLeft(y));
+  g.append("g").attr("transform", "translate(" + pr + ",0)").call(d3.axisLeft(y));
 };
 
 onMounted(() => {
