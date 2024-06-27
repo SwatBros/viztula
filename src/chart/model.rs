@@ -6,7 +6,7 @@ pub struct Chart {
     pub columns: Vec<String>,
 }
 
-trait Query {
+pub trait Query {
     fn query(&self) -> String;
 }
 
