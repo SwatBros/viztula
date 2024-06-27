@@ -28,7 +28,8 @@ pub fn serialize_json(rows: Vec<PgRow>) -> Result<Vec<serde_json::Value>, serde_
                         column.name(),
                         match type_name {
                             "TEXT" | "VARCHAR" => json!(row.get::<String, _>(ordinal)),
-                            "INTEGER" => json!(row.get::<i64, _>(ordinal)),
+                            "INTEGER" | "INT8" => json!(row.get::<i64, _>(ordinal)),
+                            "INT4" => json!(row.get::<i32, _>(ordinal)),
                             "BOOLEAN" => json!(row.get::<bool, _>(ordinal)),
                             "REAL" => json!(row.get::<f64, _>(ordinal)),
                             "TIMESTAMP" => json!(row.get::<chrono::NaiveDateTime, _>(ordinal)),
